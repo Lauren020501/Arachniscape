@@ -1,0 +1,23 @@
+public GameObject SpiderPlayer;
+    RaycastHit hit;
+    
+
+
+    private void Start()
+    {
+        
+    }
+    void Update()
+    {
+        float mouseInputX = Input.GetAxis("Mouse X");
+        Vector3 lookhereX = new Vector3(0, mouseInputX, 0);
+        SpiderPlayer.transform.Rotate(lookhereX);
+        transform.Rotate(lookhereX);
+
+        float mouseInputY = Input.GetAxis("Mouse Y");
+        Vector3 lookhereY = new Vector3(mouseInputY, 0, 0);
+        transform.Rotate(-lookhereY);
+
+       
+
+    }
