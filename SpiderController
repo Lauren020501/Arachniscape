@@ -51,17 +51,6 @@ public class SpiderController: MonoBehaviour
         {
             velocityY = 0;
         }
-
-        //controls for looking around with mouse
-        float mouseInputX = Input.GetAxis("Mouse X");
-        Vector3 lookhereX = new Vector3(0, mouseInputX, 0);
-        transform.Rotate(lookhereX);
-
-        float mouseInputY = Input.GetAxis("Mouse Y");
-        mouseInputY = Mathf.Clamp (mouseInputY,minAngle, maxAngle);
-        Vector3 lookhereY = new Vector3(mouseInputY, 0, 0);
-        Camera.transform.Rotate (-lookhereY);
-        //need to edit and give angle restrictions
        
     }
 
