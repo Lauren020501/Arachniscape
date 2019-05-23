@@ -7,17 +7,16 @@ public class EnemySpawner : MonoBehaviour
     public float radius = 1.0f;
     public float minSpawnTime = 1.0f;
     public float maxSpawnTime = 3.0f;
-    public bool constantSpawn = false;
-    public bool broken = false;
+    public int EnemyCount;
     public Transform spawnPosition;
     Vector3 randomLocation;
 
     private void Start()
     {
-        float x = Spawner.transform.position.x;
-        float y = Spawner.transform.position.y;
-        float z = Spawner.transform.position.z;
-        randomLocation = new Vector3(x,y,z) + Random.insideUnitSphere * 5; 
+        float xPos = Spawner.transform.position.x;
+        float yPos = Spawner.transform.position.y;
+        float zPos = Spawner.transform.position.z;
+        randomLocation = new Vector3(xPos,yPos,zPos) + Random.insideUnitSphere * 5; 
         randomLocation.y = 0.0f;
         EggFull.SetActive(true);
         EggBroken.SetActive(false);
@@ -25,29 +24,24 @@ public class EnemySpawner : MonoBehaviour
 
     void OnTriggerEnter(Collider Other)
     {
-        if (broken == false)
+        StartCoroutine(EnemySpawn()); 
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        
+    }
+
+    IEnumerator EnemySpawn()
+    {
+        while (EnemyCount < 5)
         {
-            Invoke("SpawnEnemy", Random.Range(minSpawnTime, maxSpawnTime));
-            constantSpawn = false;
+            float spawnRadius = radius;
+            int spawnObjectIndex = Random.Range(0, spawnObject.Length);
+            transform.position = Random.insideUnitSphere * spawnRadius;
+            Instantiate(spawnObject[spawnObjectIndex],new Vector3(0,0,0), Quaternion.identity );
+            yield return new WaitForSeconds(0.5f);
+            EnemyCount += 1;
         }
+    }
        
     }
-
-    void OnTriggerExit(Collider Other)
-    {
-        if (constantSpawn == false)
-        {
-            CancelInvoke("SpawnEnemy");
-            EggFull.SetActive(false);
-            EggBroken.SetActive(true);
-        }
-    }
-
-    void SpawnEnemy()
-    {
-        float spawnRadius = radius;
-        int spawnObjectIndex = Random.Range(0, spawnObject.Length);
-        transform.position = Random.insideUnitSphere * spawnRadius;
-        Instantiate(spawnObject[spawnObjectIndex], spawnPosition.position + randomLocation, spawnObject[spawnObjectIndex].transform.rotation);
-    }
-}
