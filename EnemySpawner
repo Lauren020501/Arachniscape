@@ -4,44 +4,42 @@ public class EnemySpawner : MonoBehaviour
     public GameObject Spawner;
     public GameObject EggFull;
     public GameObject EggBroken;
-    public float radius = 1.0f;
-    public float minSpawnTime = 1.0f;
-    public float maxSpawnTime = 3.0f;
     public int EnemyCount;
-    public Transform spawnPosition;
     Vector3 randomLocation;
-
+    public float xMin = 0;
+    public float xMax = 0;
+    public float zMin = 0;
+    public float zMax = 0;
+    public float enemyMax;
+    
     private void Start()
     {
-        float xPos = Spawner.transform.position.x;
-        float yPos = Spawner.transform.position.y;
-        float zPos = Spawner.transform.position.z;
-        randomLocation = new Vector3(xPos,yPos,zPos) + Random.insideUnitSphere * 5; 
-        randomLocation.y = 0.0f;
         EggFull.SetActive(true);
         EggBroken.SetActive(false);
     }
 
-    void OnTriggerEnter(Collider Other)
+    void OnTriggerEnter(Collider other)
     {
-        StartCoroutine(EnemySpawn()); 
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        
+        if (other.gameObject.tag == "Spider")
+        {
+            StartCoroutine(EnemySpawn());
+            EggFull.SetActive(false);
+            EggBroken.SetActive(true);
+        }
     }
 
     IEnumerator EnemySpawn()
     {
-        while (EnemyCount < 5)
+        while (EnemyCount < enemyMax)
         {
-            float spawnRadius = radius;
+            float xPos = Random.Range(xMin, xMax);
+            float zPos = Random.Range(zMin, zMax);
+            randomLocation = new Vector3(xPos, 2.39f, zPos);
             int spawnObjectIndex = Random.Range(0, spawnObject.Length);
-            transform.position = Random.insideUnitSphere * spawnRadius;
-            Instantiate(spawnObject[spawnObjectIndex],new Vector3(0,0,0), Quaternion.identity );
-            yield return new WaitForSeconds(0.5f);
+            Instantiate(spawnObject[spawnObjectIndex],randomLocation, Quaternion.identity);
+            yield return new WaitForSeconds(1.0f);
             EnemyCount += 1;
         }
     }
-       
-    }
+
+}
